@@ -272,6 +272,36 @@ public class BuilderTest
 
         assertTrue(results.getMessages().isEmpty());
     }
+    
+    @Test
+    public void testKModuleMortgageComplex() throws Exception {
+        URL url = this.getClass().getResource("/ExampleMortgageComplex");
+        SimpleFileSystemProvider p = new SimpleFileSystemProvider();
+        org.uberfire.java.nio.file.Path path = p.getPath(url.toURI());
+
+        final Module module = moduleService.resolveModule(Paths.convert(path));
+
+        final Builder builder = new Builder(module,
+                                            ioService,
+                                            moduleService,
+                                            importsService,
+                                            new ArrayList<>(),
+                                            dependenciesClassLoaderCache,
+                                            pomModelCache,
+                                            getPackageNameWhiteListService(),
+                                            alwaysTrue);
+
+        final BuildResults results = builder.build();
+
+        //Debug output
+        if (!results.getMessages().isEmpty()) {
+            for (BuildMessage m : results.getMessages()) {
+                logger.debug(m.getText());
+            }
+        }
+
+        assertTrue(results.getMessages().isEmpty());
+    }
 
     @Test
     public void testBuilderFixForBrokenKModule() throws Exception {
